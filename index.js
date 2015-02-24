@@ -1,4 +1,4 @@
-import _ from "lodash-node"
+import _ from "lodash"
 import React from "react/addons"
 import createSideEffect from "react-side-effect"
 
