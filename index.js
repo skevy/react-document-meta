@@ -19,7 +19,7 @@ function metaTagDataFromChildren(children) {
 
   return _(childProps)
     .map((val) => {
-      return [val.name, val.content]
+      return [val.property, val.content]
     })
     .object()
     .value()
@@ -28,7 +28,7 @@ function metaTagDataFromChildren(children) {
 /**
  * Reduce meta tag data from all mounted instances.
  * @param  {Array} propsList  A list of all props from all mounted instances
- * @return {Object}           An object of the form { name: content } representing meta tag data.
+ * @return {Object}           An object of the form { property: content } representing meta tag data.
  */
 function getMetaTagsFromPropsList(propsList) {
   let childMetaTags = _.map(propsList, (list) => {
@@ -39,13 +39,13 @@ function getMetaTagsFromPropsList(propsList) {
 }
 
 /*
-  Dummy class that represents a Meta tag. Takes name and content as props. Renders nothing.
+  Dummy class that represents a Meta tag. Takes property and content as props. Renders nothing.
  */
 export var MetaTag = React.createClass({
   displayName: "MetaTag",
 
   propTypes: {
-    name: React.PropTypes.string.isRequired,
+    property: React.PropTypes.string.isRequired,
     content: React.PropTypes.string.isRequired
   },
 
@@ -63,8 +63,8 @@ export var MetaTag = React.createClass({
   Example: 
   --------
   <DocumentMeta>
-    <MetaTag name="og:title" content="A sample Open Graph Title" />
-    <MetaTag name="description" content="This is a sample description" />
+    <MetaTag property="og:title" content="A sample Open Graph Title" />
+    <MetaTag property="description" content="This is a sample description" />
   </DocumentMeta>
  */
 export var DocumentMeta = createSideEffect(function handleChange(propsList) {
@@ -76,15 +76,15 @@ export var DocumentMeta = createSideEffect(function handleChange(propsList) {
     for(let tag of metaTagNodes) {
       tag.parentNode.removeChild(tag)
     }
-    _.forEach(metaTags, (content, name) => {
+    _.forEach(metaTags, (content, property) => {
       let newMetaTag = document.createElement("meta")
-      newMetaTag.name = name
+      newMetaTag.setAttribute("property", property)
       newMetaTag.content = content
       newMetaTag.setAttribute("data-document-meta", "true")
       document.getElementsByTagName('head')[0].appendChild(newMetaTag)
     })
   } else {
-    _serverMeta = _.map(metaTags, (content, name) => `<meta name="${name}" data-document-meta="true" content="${content}" />`).join("") || null
+    _serverMeta = _.map(metaTags, (content, property) => `<meta property="${property}" data-document-meta="true" content="${content}" />`).join("") || null
   }
 }, {
   displayName: "DocumentMeta",
