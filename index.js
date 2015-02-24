@@ -19,7 +19,11 @@ function metaTagDataFromChildren(children) {
 
   return _(childProps)
     .map((val) => {
-      return [val.property, val.content]
+      if(val.name) {
+        return [val.name, val]
+      } else {
+        return [val.property, val]  
+      }
     })
     .object()
     .value()
@@ -28,7 +32,7 @@ function metaTagDataFromChildren(children) {
 /**
  * Reduce meta tag data from all mounted instances.
  * @param  {Array} propsList  A list of all props from all mounted instances
- * @return {Object}           An object of the form { property: content } representing meta tag data.
+ * @return {Object}           An object of the form { [name or property]: properties } representing meta tag data.
  */
 function getMetaTagsFromPropsList(propsList) {
   let childMetaTags = _.map(propsList, (list) => {
@@ -39,13 +43,14 @@ function getMetaTagsFromPropsList(propsList) {
 }
 
 /*
-  Dummy class that represents a Meta tag. Takes property and content as props. Renders nothing.
+  Dummy class that represents a Meta tag. Takes name or property and content as props. Renders nothing.
  */
 export var MetaTag = React.createClass({
   displayName: "MetaTag",
 
   propTypes: {
-    property: React.PropTypes.string.isRequired,
+    name: React.PropTypes.string,
+    property: React.PropTypes.string,
     content: React.PropTypes.string.isRequired
   },
 
@@ -76,15 +81,28 @@ export var DocumentMeta = createSideEffect(function handleChange(propsList) {
     for(let tag of metaTagNodes) {
       tag.parentNode.removeChild(tag)
     }
-    _.forEach(metaTags, (content, property) => {
+    _.forEach(metaTags, (properties, nameOrProperty) => {
+      let {name, property, content} = properties
+
       let newMetaTag = document.createElement("meta")
-      newMetaTag.setAttribute("property", property)
       newMetaTag.content = content
+
+      if(name)
+        newMetaTag.name = name
+      else if(property)
+        newMetaTag.setAttribute("property", property)
+
       newMetaTag.setAttribute("data-document-meta", "true")
       document.getElementsByTagName('head')[0].appendChild(newMetaTag)
     })
   } else {
-    _serverMeta = _.map(metaTags, (content, property) => `<meta property="${property}" data-document-meta="true" content="${content}" />`).join("") || null
+    _serverMeta = _.map(metaTags, (properties, nameOrProperty) => {
+      let {name, property, content} = properties
+      if(name)
+        return `<meta name="${name}" data-document-meta="true" content="${content}" />`
+      else if(property)
+        return `<meta property="${property}" data-document-meta="true" content="${content}" />`
+    }).join("") || null
   }
 }, {
   displayName: "DocumentMeta",
