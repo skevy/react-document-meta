@@ -1,0 +1,33 @@
+{
+  "name": "react-document-meta",
+  "version": "1.0.0",
+  "description": "Declarative document meta for React",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/skevy/react-document-meta.git"
+  },
+  "keywords": [
+    "react",
+    "component",
+    "react-component",
+    "document.meta",
+    "meta",
+    "jsx",
+    "open",
+    "graph"
+  ],
+  "author": "Adam Miskiewicz <adam@sk3vy.com> (http://github.com/skevy)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/skevy/react-document-meta/issues"
+  },
+  "homepage": "https://github.com/skevy/react-document-meta",
+  "dependencies": {
+    "react": "^0.12.2",
+    "react-side-effect": "^0.3.0"
+  }
+}
