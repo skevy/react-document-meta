@@ -1,5 +1,5 @@
 =======
-NOTE: THIS IS PREPRODUCTION. DO NOT USE.
+Currently unsupported and unused. Use React-Helmet instead: https://github.com/nfl/react-helmet
 =======
 
 React Document Meta
